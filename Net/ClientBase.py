@@ -16,10 +16,6 @@ class ClientBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def newClient(self):
-        pass
-
-    @abstractmethod
     def genAccount(self):
         pass
 
