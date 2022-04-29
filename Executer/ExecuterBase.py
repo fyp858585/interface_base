@@ -12,6 +12,8 @@ import pkgutil
 import multiprocessing
 import threading
 from threading import Lock
+from FrameConfigManager import FrameConfigManager
+import time
 
 
 class ExecuteBase(object):
@@ -22,6 +24,8 @@ class ExecuteBase(object):
         self.lock = Lock()
         self.casePath_todo = Case.__name__ + "."
         self.allClsList = self.collectAllTestClsByList(testClsNameList) if testClsNameList else self.collectAllTestCls()
+        self.logName = FrameConfigManager.getConfigByKey("projectName") + "-" + time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + ".log"
+        self.logPath = FrameConfigManager.getConfigByKey("logAddress")
 
     # 获取所有Case 并import
     def importAllTestCase(self):
@@ -66,7 +70,9 @@ class ExecuteBase(object):
             for methodName in obj.methodNameListOrderedByDef:
                 method = getattr(obj, methodName)
                 # 运行
-                method()
+                obj.reporter.logDrive(method)
+            print(obj.reporter.logStack)
+            obj.reporter.record(self.logHolePath, obj.reporter.logStack)
 
     # 多线程执行
     def _threadRunAll(self):
