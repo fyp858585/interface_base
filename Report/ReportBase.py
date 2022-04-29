@@ -14,7 +14,7 @@ import copy
 
 T = typing.TypeVar("T")
 
-class Logger(object):
+class ReportBase(object):
 
     cur_path = os.path.dirname(os.path.realpath(__file__))
     log_path = os.path.join(cur_path, 'logs')
@@ -101,6 +101,9 @@ class Logger(object):
         ...
 
     def record(self, logPath:str, externalLogStack:list):
+        if not os.path.exists(logPath):
+            with open(logPath, "w", encoding="utf-8")as f:
+                pass
         with open(logPath, "a+", encoding="utf-8") as logFile:
             logDataList = [json.dumps(log) + "\n" for log in externalLogStack]
             logStr = "".join(logDataList)
@@ -110,6 +113,6 @@ class Logger(object):
 
 
 if __name__ == "__main__":
-    a = Logger()
+    a = ReportBase()
 
 
